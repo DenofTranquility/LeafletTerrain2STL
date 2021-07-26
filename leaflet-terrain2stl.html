@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script
+			  src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+			  integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+			  crossorigin="anonymous"></script>
+    <script src="Leaflet.Editable.js"></script>
+    <script src="Path.Drag.js"></script>
+    <script defer src="leaflet-terrain2stl.js"></script>
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h1>Leaflet Terrain2STL</h1>
+      <div class="row">
+        <div class="col-md-8" id=mapid style="height: 50vw;"></div>
+        <div class="col-md-3 textcenter">
+          <h4>How to use</h4>
+          <p>Input latitude and longitude to be taken anywhere on the planet or just click and drag the map.<br><br> When you have found the area you want a custom map of, click the button indicating a square and drag the area to be covered.<br><br> The rectangle will maintain an area 4:3 in scale, once ready click the generate button and then download.</p>
+          <form id="paramForm" action="./stlGen.php" method='post' class="form-group">
+            <div class="row">
+              <div class="col-md-6">
+                <label>Latitude:</label>
+                <input class="form-control" id="NWlat" name="NWlat" value=""readonly></input>
+              </div>
+              <div class="col-md-6">
+                <label>Longitude:</label>
+                <input class="form-control" id="NWlng" name="NWlng" value=""readonly></input>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+              <div class="col-md-6">
+                <label>Width:</label>
+                <input class="form-control" id="width" name="width" value="" readonly></input>
+              </div>
+              <div class="col-md-6">
+                <label>Height:</label>
+                <input class="form-control" id="height" name="height" value="" readonly></input>
+              </div>
+              <div class="col-md-2">
+                <label id="northwestLatLng" value=""></label>
+              </div>
+            </div>
+            <button id="genButton" class="btn btn-primary" type="submit" value="SUBMIT">Generate</button>
+            <a id="downloadbtn" style="visibility:hidden" role="button" class="btn btn-default" href="stls/rawmodel-0.stl">Download</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
