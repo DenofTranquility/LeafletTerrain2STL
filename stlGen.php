@@ -25,7 +25,9 @@ $NWlat = $decoded['NWlat'];
 $NWlng = $decoded['NWlng'];
 // $width = $decoded['width'];
 $height = $decoded['height'];
-$width = $height * 2.33;
+
+// Aspect ratio doesn't translate to the same view for some reason, this more closely approximates the correct size of box to be processed.
+$width = $height * 2.33; 
 
 $height = $height * $arcSecondEquator;
 $width = $width * $arcSecondEquator;
