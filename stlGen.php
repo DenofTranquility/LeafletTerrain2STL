@@ -14,7 +14,7 @@ $decoded = json_decode($content, true);
 if(!is_array($decoded)){
     throw new Exception('Received content contained invalid JSON!');
 }
-
+$arcSecondEquator = 30.87; // in metres
 $rotation = 0;
 $vScale = 1;
 $waterDrop = 2;
@@ -23,18 +23,22 @@ $boxScale = 1;
 $form = $_POST;
 $NWlat = $decoded['NWlat'];
 $NWlng = $decoded['NWlng'];
-$width = $decoded['width'];
+// $width = $decoded['width'];
 $height = $decoded['height'];
+$width = $height * 2.33;
 
-$location = number_format($NWlat, 2) . 'N' . number_format($NWlng, 2) . 'E';
+$height = $height * $arcSecondEquator;
+$width = $width * $arcSecondEquator;
+
+$location = number_format($NWlat, 3) . 'N' . number_format($NWlng, 3) . 'E';
 
 $zipname  = "./stls/terrain_". $location;
 $filename = "./stls/rawmodel_". $location . ".stl";
 
 
-$command = "./celevstl" . " " . $NWlat . " " . $NWlng . " " . $width/3 . " "
-. $height/3 . " " . $vScale . " " . $rotation . " " . $waterDrop . " " .
-$baseHeight . " " . $boxScale . " " . $filename;
+$command = "./celevstl" . " " . escapeshellarg($NWlat) . " " . escapeshellarg($NWlng) . " " . escapeshellarg($width/3) . " "
+. escapeshellarg($height/3) . " " . escapeshellarg($vScale) . " " . escapeshellarg($rotation) . " " . escapeshellarg($waterDrop) . " " .
+escapeshellarg($baseHeight) . " " . escapeshellarg($boxScale) . " " . escapeshellarg($filename);
 // $command .= "; zip -q " . $zipname . " " . $filename;
 
 
