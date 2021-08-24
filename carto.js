@@ -8,7 +8,10 @@ const map = L.map('mapid', {
 L.tileLayer(tiles, {
   attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
 }).addTo(map);
-L.Control.geocoder().addTo(map);
+var geocoder = L.Control.geocoder({defaultMarkGeoCode:false}).on('markgeocode', function(e) {
+  console.log(e);
+  //Move rectangle to center of view or delete it.
+}).addTo(map);
 let marker = L.marker([51.5, -0.09]).addTo(map);
 
 const fourThreeRatio = 1.33
@@ -86,6 +89,10 @@ L.NewRectangleControl = L.EditControl.extend({
 var deleteShape = function (e) {
   if ((e.originalEvent.ctrlKey || e.originalEvent.metaKey) && this.editEnabled()) this.editor.deleteShapeAt(e.latlng), document.querySelector(".rect-btn").removeAttribute("disabled");
 };
+map.on('editable:enable', function (e) {
+  e.layer.setStyle({color: 'Cyan'});
+});
+
 map.on('layeradd', function (e) {
     if (e.layer instanceof L.Path) e.layer.on('click', L.DomEvent.stop).on('click', deleteShape, e.layer);
     // if (e.layer instanceof L.Path) e.layer.on('dblclick', L.DomEvent.stop).on('dblclick', e.layer.toggleEdit);
