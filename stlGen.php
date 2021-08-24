@@ -16,8 +16,8 @@ if(!is_array($decoded)){
 }
 $arcSecondEquator = 30.87; // in metres
 $rotation = 0;
-$vScale = 1;
-$waterDrop = 2;
+$vScale = 1.7;
+$waterDrop = 1;
 $baseHeight = 3;
 $boxScale = 1;
 $form = $_POST;
@@ -27,19 +27,21 @@ $NWlng = $decoded['NWlng'];
 $height = $decoded['height'];
 
 // Aspect ratio doesn't translate to the same view for some reason, this more closely approximates the correct size of box to be processed.
-$width = $height * 2.33; 
+$width = $height * 2.33;
 
-$height = $height * $arcSecondEquator;
-$width = $width * $arcSecondEquator;
+// $height = $height/3 * $arcSecondEquator;
+// $width = $width/3 * $arcSecondEquator;
 
+// $height = $height/10;
+// $width = $width/10;
 $location = number_format($NWlat, 3) . 'N' . number_format($NWlng, 3) . 'E';
 
 $zipname  = "./stls/terrain_". $location;
 $filename = "./stls/rawmodel_". $location . ".stl";
 
 
-$command = "./celevstl" . " " . escapeshellarg($NWlat) . " " . escapeshellarg($NWlng) . " " . escapeshellarg($width/3) . " "
-. escapeshellarg($height/3) . " " . escapeshellarg($vScale) . " " . escapeshellarg($rotation) . " " . escapeshellarg($waterDrop) . " " .
+$command = "sudo ./celevstl" . " " . escapeshellarg($NWlat) . " " . escapeshellarg($NWlng) . " " . escapeshellarg($width) . " "
+. escapeshellarg($height) . " " . escapeshellarg($vScale) . " " . escapeshellarg($rotation) . " " . escapeshellarg($waterDrop) . " " .
 escapeshellarg($baseHeight) . " " . escapeshellarg($boxScale) . " " . escapeshellarg($filename);
 // $command .= "; zip -q " . $zipname . " " . $filename;
 
