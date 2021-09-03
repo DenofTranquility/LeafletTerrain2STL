@@ -4,33 +4,32 @@ const map = L.map('mapid', {
   editable: true, editOptions: {
     color: '#000'
   }
-}).setView([51.505, -0.09], 12);
+}).setView([54.505, -3.19], 12);
 L.tileLayer(tiles, {
   attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
 }).addTo(map);
 var geocoder = L.Control.geocoder({defaultMarkGeoCode:false}).on('markgeocode', function(e) {
-  console.log(e);
+  // console.log(map.editor);
   //Move rectangle to center of view or delete it.
 }).addTo(map);
-let marker = L.marker([51.5, -0.09]).addTo(map);
+// let marker = L.marker([51.5, -0.09]).addTo(map);
 
 const fourThreeRatio = 1.33
 
 const C = 40075.04; //Circumference of the earth in km
-// let d; //Point at distance in kilometres.
-// let latitude = Math.min(Math.max(parseFloat(document.getElementById('c-lat').value),-69),69)
-// let latFormula = 360*d/C; //degrees
-// let lonFormula = 360*d/(C*Math.cos(latitude)); //degrees
+/*
+let d; //Point at distance in kilometres.
+let latitude = Math.min(Math.max(parseFloat(document.getElementById('c-lat').value),-69),69)
+let latFormula = 360*d/C; //degrees
+let lonFormula = 360*d/(C*Math.cos(latitude)); //degrees
+*/
 
-// At sea level a minute of arc equals exactly 1 nautical mile... (1,852 metres). A second, one sixtieth the amount, is roughly 30 metres.
-let latitude = 54.708;
+// At sea level a minute of arc equals exactly 1 nautical mile... (1,852 metres). A second; one sixtieth the amount, is roughly 30 metres.
 const arcSecondLongitude = 30.866666667; //metres
-let distance = 12888; //metres
-let calculatedMetres = Math.cos(54) * (2 * arcSecondLongitude);
+// let calculatedMetres = Math.cos(latitude) * (2 * arcSecondLongitude);
 function calculatedArcSecond(distance) {
     return distance / arcSecondLongitude;
 }
-// console.log(calculatedMetres);
 
 function heightCalculator(width, latlng, e) {
   // let aspectRatio = Math.floor(width).toFixed(2) / Math.floor(height).toFixed(2);
@@ -86,11 +85,25 @@ L.NewRectangleControl = L.EditControl.extend({
             html: '⬛'
         }
 });
+function shapeToPoints(shape) {
+  let layer = shape.layer;
+  // console.log(layer);
+  let bounds = layer.getBounds();
+  let southWest = bounds._southWest;
+  let northEast = bounds._northEast;
+  let southWestPoint = map.latLngToContainerPoint(southWest);
+  let northEastPoint = map.latLngToContainerPoint(northEast);
+  // console.log(southWestPoint, northEastPoint);
+}
+map.on('editable:drawing:commit', e => {
+  shapeToPoints(e);
+});
+
 var deleteShape = function (e) {
   if ((e.originalEvent.ctrlKey || e.originalEvent.metaKey) && this.editEnabled()) this.editor.deleteShapeAt(e.latlng), document.querySelector(".rect-btn").removeAttribute("disabled");
 };
 map.on('editable:enable', function (e) {
-  e.layer.setStyle({color: 'Cyan'});
+  e.layer.setStyle({color: '#5ba390'});
 });
 
 map.on('layeradd', function (e) {
@@ -102,6 +115,7 @@ map.addControl(new L.NewRectangleControl())
 //   console.log(e.latlng);
 // })
 map.on('editable:vertex:drag', function(e) {
+
   let index = e.vertex.getIndex(),
       next = e.vertex.getNext(),
       previous = e.vertex.getPrevious(),
@@ -129,6 +143,7 @@ map.on('editable:vertex:drag', function(e) {
   // document.getElementById('lng').innerHTML = 'Longitude: ' + e.latlng.lng.toFixed(3);
 });
 map.on('editable:dragend', function(e) {
+  shapeToPoints(e);
   let bounds = e.layer.getBounds();
   let northwest = {'lat': bounds._northEast.lat, 'lng': bounds._southWest.lng};
   NWlat.setAttribute('value', northwest.lat);
@@ -150,8 +165,8 @@ map.on('editable:vertex:dragend', function(e) {
    heightElVal.setAttribute('value', distanceHeight);
    widthElVal.value = calculatedArcSecond(distanceWidth)/3;
    heightElVal.value = calculatedArcSecond(distanceHeight)/3;
-   console.log(calculatedArcSecond(distanceWidth)/3);
-   console.log(calculatedArcSecond(distanceHeight)/3);
+   // console.log(calculatedArcSecond(distanceWidth)/3);
+   // console.log(calculatedArcSecond(distanceHeight)/3);
 
    currentBounds = e.layer.getBounds();
    let northwest = {'lat': currentBounds._northEast.lat, 'lng': currentBounds._southWest.lng};
@@ -194,9 +209,7 @@ async function handlerFormSubmit(event) {
   document.querySelector("#genButton").classList.add("disabled");
   document.querySelector("#genButton").innerHTML = "<i>Generating...</i>";
 
-  let modelNumber = event.currentTarget.responseText;
-  let modelName   = "stls/terrain-"+modelNumber+".zip";
-  downloadButton.style = "visibility:visible";
+
 
   try {
     const formData = new FormData(form);
@@ -226,5 +239,12 @@ async function postFormDataAsJson({url, formData}) {
 
   document.querySelector("#genButton").classList.remove("disabled");
   document.querySelector("#genButton").innerHTML = "Generate Model";
-  return console.log(response.text());
+  // let modelNumber = response.text();
+  downloadButton.style = "visibility:visible";
+  return response.text().then(function(text) {
+    let modelName   = "stls/terrain-"+text+".zip";
+    downloadButton.href = text;
+    console.log(modelName);
+
+  });
 }

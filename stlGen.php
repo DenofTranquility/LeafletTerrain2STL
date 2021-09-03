@@ -43,7 +43,7 @@ $filename = "./stls/rawmodel_". $location . ".stl";
 $command = "sudo ./celevstl" . " " . escapeshellarg($NWlat) . " " . escapeshellarg($NWlng) . " " . escapeshellarg($width) . " "
 . escapeshellarg($height) . " " . escapeshellarg($vScale) . " " . escapeshellarg($rotation) . " " . escapeshellarg($waterDrop) . " " .
 escapeshellarg($baseHeight) . " " . escapeshellarg($boxScale) . " " . escapeshellarg($filename);
-// $command .= "; zip -q " . $zipname . " " . $filename;
+// $command .= "| zip -q " . $zipname . " " . $filename;
 
 
 $startTime = date("Y-m-d H:i:s");
@@ -52,7 +52,7 @@ $paramLog = $startTime."\t".$NWlat."\t".$NWlng.
 "\t".$width."\t".$height."\t".$vScale."\t".
 $rotation."\t".$waterDrop."\t".$baseHeight."\t".$boxScale."\t";
 
-print_r($command);
+// print_r($command);
+print_r($filename);
 exec($command);
-
 ?>
