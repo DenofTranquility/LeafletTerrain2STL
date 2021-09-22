@@ -40,7 +40,7 @@ $zipname  = "./stls/terrain_". $location;
 $filename = "./stls/rawmodel_". $location . ".stl";
 
 
-$command = "sudo ./celevstl" . " " . escapeshellarg($NWlat) . " " . escapeshellarg($NWlng) . " " . escapeshellarg($width) . " "
+$command = "./celevstl" . " " . escapeshellarg($NWlat) . " " . escapeshellarg($NWlng) . " " . escapeshellarg($width) . " "
 . escapeshellarg($height) . " " . escapeshellarg($vScale) . " " . escapeshellarg($rotation) . " " . escapeshellarg($waterDrop) . " " .
 escapeshellarg($baseHeight) . " " . escapeshellarg($boxScale) . " " . escapeshellarg($filename);
 // $command .= "| zip -q " . $zipname . " " . $filename;
